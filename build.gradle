@@ -1,0 +1,30 @@
+plugins {
+    id "io.gatling.gradle" version "3.9.0"
+    id "scala"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    gatling 'com.github.javafaker:javafaker:1.0.2'
+}
+
+gatling {
+    // WARNING: options below only work when logback config file isn't provided
+    logLevel = 'NONE' // logback root level
+    logHttp = 'NONE'
+    // set to 'ALL' for all HTTP traffic in TRACE, 'FAILURES' for failed HTTP traffic in DEBUG
+    jvmArgs = ['-server',
+               '-Xms512M',
+               '-Xmx512M',
+               "-Dlogback.configurationFile=${logbackGatlingConfig()}"
+    ]
+}
+
+def logbackGatlingConfig() {
+    return sourceSets.gatling.resources.find { it.name == 'logback-gatling.xml' }
+}
